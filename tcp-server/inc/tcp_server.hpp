@@ -1,9 +1,38 @@
-#include "tcp_server.h"
+#ifndef TCP_SERVER_HPP
+#define TCP_SERVER_HPP
+
+#include "log.h"
+#include "tcp_session.h"
+#include "io_service_pool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/functional/factory.hpp>
 using namespace boost;
 using namespace boost::asio;
+
+template<typename Handler>
+class tcp_server
+{
+public:
+	typedef io_service_pool::ios_type ios_type;
+
+	tcp_server (unsigned short port, int n = 1);
+	void start();
+	void run();
+
+private:
+	io_service_pool 		m_ios_pool;
+	typedef boost::asio::ip::tcp::acceptor acceptor_type;
+	acceptor_type		m_acceptor;
+
+	typedef Handler handler_type;
+	handler_type			m_handler;
+
+	void start_accept();
+	void handle_accept (const boost::system::error_code& error,
+			tcp_session_ptr session);
+};//tcp_server
+
 
 template<typename Handler>
 tcp_server<Handler>::tcp_server (unsigned short port, int n) :
@@ -49,3 +78,5 @@ void tcp_server<Handler>::run()
 {
 	m_ios_pool.run();
 }
+
+#endif //TCP_SERVER_HPP
