@@ -31,9 +31,14 @@ tcp_session::buffer_type& tcp_session::write_buf()
 	return m_write_buf;
 }
 
-void tcp_session::start()
+void tcp_session::start(tcp_handler handler)
 {
-	LOG_INFO << "session start";
+	//LOG_INFO << "session start";
+	m_handler = handler;
+	if (m_handler.handle_open)
+	{
+		m_handler.handle_open (shared_from_this() );
+	}
 
 	read();
 }
@@ -43,6 +48,11 @@ void tcp_session::close()
 	boost::system::error_code ignored_ec;
 	m_socket.shutdown (ip::tcp::socket::shutdown_both, ignored_ec);
 	m_socket.close (ignored_ec);
+
+	if (m_handler.handle_close)
+	{
+		m_handler.handle_close (shared_from_this() );
+	}
 }
 
 void tcp_session::read()
@@ -64,11 +74,14 @@ void tcp_session::handle_read (const system::error_code& error, size_t bytes_tra
 	}
 
 	LOG_INFO << "read size : " << bytes_transferred;
-
 	m_read_buf.retrieve (bytes_transferred);
 	LOG_INFO << string (m_read_buf.peek(), bytes_transferred);
 
-	write (m_read_buf.peek() ,bytes_transferred);
+	//write (m_read_buf.peek() ,bytes_transferred);
+	if (m_handler.handle_read)
+	{
+		m_handler.handle_read (shared_from_this(), bytes_transferred);
+	}
 
 	m_read_buf.consume (bytes_transferred);
 	read();
@@ -102,5 +115,10 @@ void tcp_session::handle_write (const system::error_code& error, size_t bytes_tr
 	}
 
 	m_write_buf.consume (bytes_transferred);
-	LOG_INFO << "write complete";
+
+	if (m_handler.handle_write)
+	{
+		m_handler.handle_write (shared_from_this(), bytes_transferred);
+	}
+	//LOG_INFO << "write complete";
 }

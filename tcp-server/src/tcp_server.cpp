@@ -5,7 +5,8 @@
 using namespace boost;
 using namespace boost::asio;
 
-tcp_server::tcp_server (unsigned short port, int n) :
+template<typename Handler>
+tcp_server<Handler>::tcp_server (unsigned short port, int n) :
 		m_ios_pool (n),
 		m_acceptor (m_ios_pool.get(),
 				ip::tcp::endpoint (ip::tcp::v4(), port) )
@@ -13,7 +14,8 @@ tcp_server::tcp_server (unsigned short port, int n) :
 	start_accept();
 }
 
-void tcp_server::start_accept ()
+template<typename Handler>
+void tcp_server<Handler>::start_accept ()
 {
 	//tcp_session_ptr session = factory<tcp_session_ptr> () (m_ios_pool.get() );
 	tcp_session_ptr session = make_shared<tcp_session> (m_ios_pool.get() );
@@ -21,7 +23,8 @@ void tcp_server::start_accept ()
 			bind (&tcp_server::handle_accept, this, asio::placeholders::error, session) );
 }
 
-void tcp_server::handle_accept (const system::error_code& error, tcp_session_ptr session)
+template<typename Handler>
+void tcp_server<Handler>::handle_accept (const system::error_code& error, tcp_session_ptr session)
 {
 	start_accept ();
 
@@ -31,16 +34,18 @@ void tcp_server::handle_accept (const system::error_code& error, tcp_session_ptr
 		return;
 	}
 
-	session->start();
+	session->start(m_handler);
 	// or session->io_service().dispatch (bind(&tcp_session::start, session) );
 }
 
-void tcp_server::start()
+template<typename Handler>
+void tcp_server<Handler>::start()
 {
 	m_ios_pool.start();
 }
 
-void tcp_server::run()
+template<typename Handler>
+void tcp_server<Handler>::run()
 {
 	m_ios_pool.run();
 }

@@ -5,6 +5,7 @@
 #include "tcp_session.h"
 #include "io_service_pool.hpp"
 
+template<typename Handler>
 class tcp_server
 {
 public:
@@ -18,6 +19,10 @@ private:
 	io_service_pool 		m_ios_pool;
 	typedef boost::asio::ip::tcp::acceptor acceptor_type;
 	acceptor_type		m_acceptor;
+
+	typedef Handler handler_type;
+	handler_type			m_handler;
+
 	void start_accept();
 	void handle_accept (const boost::system::error_code& error,
 			tcp_session_ptr session);

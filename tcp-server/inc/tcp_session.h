@@ -5,6 +5,7 @@
 #include "tcp_buffer.hpp"
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
+#include "tcp_handler.hpp"
 
 class tcp_session :
 		public boost::enable_shared_from_this<tcp_session>
@@ -15,6 +16,7 @@ public:
 	typedef tcp_buffer 										buffer_type;
 
 private:
+	tcp_handler		m_handler;
 	socket_type 	m_socket;
 	buffer_type 		m_read_buf;
 	buffer_type 		m_write_buf;
@@ -27,7 +29,7 @@ public:
 	buffer_type& read_buf();
 	buffer_type& write_buf();
 
-	void start();
+	void start(tcp_handler handler = tcp_handler());
 	void close();
 
 	void write();
@@ -45,31 +47,3 @@ private:
 typedef boost::shared_ptr<tcp_session> tcp_session_ptr;
 
 #endif //TCP_SESSION_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
