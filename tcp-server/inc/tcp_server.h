@@ -1,6 +1,7 @@
 #ifndef TCP_SERVER_H
 #define TCP_SERVER_H
 
+#include "log.h"
 #include "tcp_session.h"
 #include "io_service_pool.hpp"
 

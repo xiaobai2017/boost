@@ -8,7 +8,8 @@ using namespace std;
 
 int main()
 {
-	cout << "server start" << endl;
+	Log::Init("../log");
+	LOG_INFO << "server start";
 
 	tcp_server svr(6677);
 	svr.run();

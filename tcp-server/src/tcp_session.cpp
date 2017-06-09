@@ -33,7 +33,7 @@ tcp_session::buffer_type& tcp_session::write_buf()
 
 void tcp_session::start()
 {
-	cout << "session start" << endl;
+	LOG_INFO << "session start";
 
 	read();
 }
@@ -57,14 +57,16 @@ void tcp_session::handle_read (const system::error_code& error, size_t bytes_tra
 {
 	if (error)
 	{
+		//LOG_TRACE << "bytes_transferred : " << bytes_transferred;
+		//LOG_TRACE << error.message();
 		close();
 		return;
 	}
 
-	cout << "read size" << bytes_transferred << endl;
+	LOG_INFO << "read size : " << bytes_transferred;
 
 	m_read_buf.retrieve (bytes_transferred);
-	cout << string (m_read_buf.peek(), bytes_transferred) << endl;
+	LOG_INFO << string (m_read_buf.peek(), bytes_transferred);
 
 	write (m_read_buf.peek() ,bytes_transferred);
 
@@ -74,8 +76,8 @@ void tcp_session::handle_read (const system::error_code& error, size_t bytes_tra
 
 void tcp_session::write (const void* data, size_t len)
 {
-	cout << "write:" << len << endl;
-	cout << static_cast<const char*> (data) << endl;
+	LOG_INFO << "write:" << len;
+	LOG_INFO << static_cast<const char*> (data);
 
 	m_write_buf.append (data, len);
 
@@ -100,23 +102,5 @@ void tcp_session::handle_write (const system::error_code& error, size_t bytes_tr
 	}
 
 	m_write_buf.consume (bytes_transferred);
-	cout << "write complete" << endl;
+	LOG_INFO << "write complete";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 #ifndef TCP_SESSION_H
 #define TCP_SESSION_H
 
+#include "log.h"
 #include "tcp_buffer.hpp"
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>

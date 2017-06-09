@@ -2,7 +2,7 @@
 #define TCP_BUFFER_HPP
 
 #include <boost/asio.hpp>
-#include <boost/config/suffix.hpp>
+//#include <boost/config/suffix.hpp>
 #include <boost/cast.hpp>
 
 class tcp_buffer
@@ -14,8 +14,8 @@ public:
 	typedef streambuf_type::mutable_buffers_type		mutable_buffers_type;
 
 private:
-	BOOST_STATIC_CONSTANT (size_type, BUF_SIZE = 512);
-	//static const size_type  BUF_SIZE = 512;
+	//BOOST_STATIC_CONSTANT (size_type, BUF_SIZE = 512);
+	static const size_type  BUF_SIZE = 16;
 	streambuf_type 	m_buf;
 
 public:
