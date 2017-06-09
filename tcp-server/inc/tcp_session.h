@@ -14,9 +14,9 @@ public:
 	typedef tcp_buffer 										buffer_type;
 
 private:
-	socket_type m_socket;
-	buffer_type m_read_buf;
-	buffer_type m_write_buf;
+	socket_type 	m_socket;
+	buffer_type 		m_read_buf;
+	buffer_type 		m_write_buf;
 
 public:
 	tcp_session (ios_type& ios);
