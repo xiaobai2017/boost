@@ -13,8 +13,8 @@ LDLIBS = -pthread \
 				-lboost_log \
 				-lboost_system \
 				-lboost_thread \
-				-lboost_regex 
-				#-lboost_date_time \
+				-lboost_regex \
+				-lboost_date_time
 				#-lboost_chrono \
 				#-lboost_serialization \
 				#-lboost_atomic \

@@ -15,7 +15,7 @@ public:
 
 private:
 	//BOOST_STATIC_CONSTANT (size_type, BUF_SIZE = 512);
-	static const size_type  BUF_SIZE = 16;
+	static const size_type  BUF_SIZE = 512;
 	streambuf_type 	m_buf;
 
 public:

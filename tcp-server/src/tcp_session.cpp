@@ -73,11 +73,8 @@ void tcp_session::handle_read (const system::error_code& error, size_t bytes_tra
 		return;
 	}
 
-	LOG_INFO << "read size : " << bytes_transferred;
 	m_read_buf.retrieve (bytes_transferred);
-	LOG_INFO << string (m_read_buf.peek(), bytes_transferred);
 
-	//write (m_read_buf.peek() ,bytes_transferred);
 	if (m_handler.handle_read)
 	{
 		m_handler.handle_read (shared_from_this(), bytes_transferred);
@@ -120,5 +117,4 @@ void tcp_session::handle_write (const system::error_code& error, size_t bytes_tr
 	{
 		m_handler.handle_write (shared_from_this(), bytes_transferred);
 	}
-	//LOG_INFO << "write complete";
 }
