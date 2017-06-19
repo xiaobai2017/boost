@@ -4,6 +4,11 @@
 
 #include "worker.hpp"
 
+//#include <cassert>
+#include <boost/assert.hpp>
+#include <boost/static_assert.hpp>
+//#include <boost/test/minimal.hpp>
+
 void test_queue()
 {
 	job_queue<int> q;
@@ -11,7 +16,7 @@ void test_queue()
 	q.push(20);
 
 	int tmp = q.pop();
-	BOOST_TEST_EQ(tmp, 10);
+	BOOST_TEST_EQ(tmp, 110);
 	BOOST_TEST_EQ (q.pop(), 20);
 	q.push(30);
 	q.stop();
@@ -47,10 +52,10 @@ void test_worker()
 	boost::this_thread::sleep(boost::posix_time::milliseconds(100) );
 }
 
-
-int main()
+#if 1
+int main ()
 {
-	//test_queue();
-	test_worker();
 	return 0;
 }
+#endif
+
