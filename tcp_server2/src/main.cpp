@@ -1,61 +1,33 @@
 #include <iostream>
-#include "job_queue.hpp"
-#include <boost/core/lightweight_test.hpp>
-
-#include "worker.hpp"
-
-//#include <cassert>
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
-//#include <boost/test/minimal.hpp>
 
-void test_queue()
+#include"tcp_server.hpp"
+#include "worker.hpp"
+using namespace std;
+
+bool handle_msg(tcp_message*& p)
 {
-	job_queue<int> q;
-	q.push(10);
-	q.push(20);
+	cout << p->get_head()->size << endl;
+	p->msg_data() [p->get_head()->size] = 0;
+	cout << p->msg_data().data() << endl;
 
-	int tmp = q.pop();
-	BOOST_TEST_EQ(tmp, 110);
-	BOOST_TEST_EQ (q.pop(), 20);
-	q.push(30);
-	q.stop();
-	tmp = q.pop();
-	BOOST_TEST_EQ(tmp, 0);
-
-	boost::report_errors();
-}
-
-bool func_int(int& x)
-{
-	std::cout << "work on : " << x << std::endl;
+	p->get_session()->write(p);
 	return true;
 }
 
-void test_worker()
-{
-	typedef job_queue<int> queue_type;
-	queue_type q;
 
-	q.push(10);
-	q.push(20);
-
-	worker<queue_type> w(q);
-
-	w.start(func_int);
-	boost::this_thread::sleep(boost::posix_time::milliseconds(100) );
-
-	q.push(20);
-	boost::this_thread::sleep(boost::posix_time::milliseconds(100) );
-
-	w.stop();
-	boost::this_thread::sleep(boost::posix_time::milliseconds(100) );
-}
-
-#if 1
 int main ()
 {
+	cout << "echo server" << endl;
+	typedef tcp_server::queue_type queue_type;
+	queue_type msg_q;
+
+	worker<queue_type> w(msg_q, handle_msg);
+	w.start();
+
+	tcp_server svr(6688, msg_q, 1);
+	svr.run();
+
 	return 0;
 }
-#endif
-
